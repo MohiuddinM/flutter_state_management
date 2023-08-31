@@ -1,3 +1,7 @@
+## 0.0.3
+
+* make error generic
+
 ## 0.0.2
 
 * Remove flutter version constraint

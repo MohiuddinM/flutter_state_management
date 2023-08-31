@@ -3,7 +3,7 @@ import 'package:flutter_state_management/flutter_state_management.dart';
 import 'package:isar_key_value/isar_key_value.dart';
 
 void main() async {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends RStatelessWidget {
@@ -21,19 +21,20 @@ class MyApp extends RStatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('You have pushed the button this many times:'),
+              const Text('You have pushed the button this many times:'),
               counter.builder(
                 onLoaded: (context, data) => Text(
                   data.toString(),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
+                onLoading: (_, __) => const CircularProgressIndicator(),
               ),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
           onPressed: counter.increment,
+          child: const Icon(Icons.add),
         ),
       ),
     );
@@ -42,8 +43,12 @@ class MyApp extends RStatelessWidget {
 
 final counterResolver = Resolver((arg) => Counter());
 
-class Counter extends PersistedStateNotifier<int> {
+class Counter extends PersistedStateNotifier<int, int> {
   Counter() : super(IsarKeyValue(), startState: 0);
 
-  void increment() => persistedState = Loaded(data: data + 1);
+  void increment() async {
+    persistedState = Loading(data: data);
+    await Future.delayed(const Duration(seconds: 2));
+    persistedState = Loaded(data: data + 1);
+  }
 }
