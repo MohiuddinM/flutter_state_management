@@ -113,10 +113,11 @@ packages:
   flutter_state_management:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.2"
+      name: flutter_state_management
+      sha256: f8e5c8c8638063a8828e79d682c8e679a307db8d0beda87f8c4eb68b39a95c52
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   frontend_server_client:
     dependency: transitive
     description:

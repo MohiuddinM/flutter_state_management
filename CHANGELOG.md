@@ -1,3 +1,7 @@
+## 0.0.4
+
+* fix typo
+
 ## 0.0.3
 
 * make error generic

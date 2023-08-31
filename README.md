@@ -5,7 +5,7 @@ easier to use the Flutter framework's built-in ChangeNotifier and Listenable.
 ## Features
 
 - No learning curve if you already know Flutter
-- Simple package base on built-in ChangeNotifier (No bloatware)
+- Simple package based on ChangeNotifier (No bloatware)
 
 
 ## Usage
