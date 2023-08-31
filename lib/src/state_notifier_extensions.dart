@@ -4,15 +4,16 @@ import 'package:flutter_state_management/src/state_notifier.dart';
 import 'package:flutter_state_management/src/reactive.dart';
 import 'builder.dart';
 
-extension StateNotifierExtensions<S> on StateNotifier<S> {
+extension StateNotifierExtensions<StateType, ErrorType>
+    on StateNotifier<StateType, ErrorType> {
   Widget builder({
     Key? key,
-    required LoadedBuilder<S> onLoaded,
-    LoadingBuilder<S>? onLoading,
+    required LoadedBuilder<StateType> onLoaded,
+    LoadingBuilder<StateType>? onLoading,
     FailureBuilder? onFailure,
-    Selector<StateNotifier<S>>? selector,
+    Selector<StateNotifier<StateType, ErrorType>>? selector,
   }) {
-    return StateNotifierBuilder<S>(
+    return StateNotifierBuilder<StateType, ErrorType>(
       key: key,
       onLoaded: onLoaded,
       onFailure: onFailure,

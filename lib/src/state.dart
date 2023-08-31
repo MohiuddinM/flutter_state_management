@@ -1,79 +1,80 @@
-sealed class DataEvent<T> {
-  T? get data;
+sealed class DataEvent<StateType, ErrorType> {
+  StateType? get data;
+
+  ErrorType? get error;
 }
 
-final class Idle<T> implements DataEvent<T> {
+final class Idle<StateType> implements DataEvent<StateType, Never> {
   const Idle({this.data});
 
   @override
-  final T? data;
+  final StateType? data;
+
+  @override
+  Never? get error => null;
 
   @override
   bool operator ==(Object other) {
-    return other is Idle<T> && other.data == data;
+    return other is Idle<StateType> && other.data == data;
   }
 
   @override
   int get hashCode => data.hashCode;
 }
 
-final class Loaded<T> implements DataEvent<T> {
+final class Loaded<StateType> implements DataEvent<StateType, Never> {
   const Loaded({required this.data});
 
   @override
-  final T data;
+  final StateType data;
+
+  @override
+  Never? get error => null;
 
   @override
   bool operator ==(Object other) {
-    return other is Loaded<T> && other.data == data;
+    return other is Loaded<StateType> && other.data == data;
   }
 
   @override
   int get hashCode => data.hashCode;
 }
 
-final class Loading<T> implements DataEvent<T> {
+final class Loading<StateType> implements DataEvent<StateType, Never> {
   const Loading({this.data});
 
   @override
-  final T? data;
+  final StateType? data;
+
+  @override
+  Never? get error => null;
 
   @override
   bool operator ==(Object other) {
-    return other is Loading<T> && other.data == data;
+    return other is Loading<StateType> && other.data == data;
   }
 
   @override
   int get hashCode => data.hashCode;
 }
 
-final class Failure<T> implements DataEvent<T> {
-  const Failure({required this.reason, this.data});
-
-  final FailureReason reason;
-
-  @override
-  final T? data;
+final class Failure<StateType, ErrorType>
+    implements DataEvent<StateType, ErrorType> {
+  const Failure({required this.error, this.data});
 
   @override
-  bool operator ==(Object other) {
-    return other is Failure<T> && other.reason == reason && other.data == data;
-  }
+  final ErrorType error;
 
   @override
-  int get hashCode => Object.hash(reason, data);
-}
-
-class FailureReason {
-  const FailureReason(this.code);
-
-  final int code;
+  final StateType? data;
 
   @override
   bool operator ==(Object other) {
-    return other is FailureReason && other.code == code;
+    return other is Failure<StateType, ErrorType> &&
+        other.error == error &&
+        other.data == data;
   }
 
   @override
-  int get hashCode => code.hashCode;
+  int get hashCode => Object.hash(error, data);
 }

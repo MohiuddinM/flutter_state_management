@@ -4,33 +4,25 @@ import 'state.dart';
 import 'state_notifier.dart';
 import 'reactive.dart';
 
-/// This function takes a [context] and [data] of type [T] and returns a widget
-///
 /// Used when notifier updates its state and widget needs to rebuild with
 /// new data
 typedef LoadedBuilder<T> = Widget Function(BuildContext context, T data);
 
-/// This function takes a [context] and [data] of type [T] and returns a widget
-///
 /// Used when [StateNotifier.state] is a [Loading] and widget needs to rebuild
 /// with busy widget (e.g. progress indicator)
 typedef LoadingBuilder<T> = Widget Function(BuildContext context, T? data);
 
-/// This function takes a [context] and an [error] and returns a widget
-///
 /// Used when [StateNotifier.state] is a [Failure] and an error widget should
 /// be built to show that error
-typedef FailureBuilder = Widget Function(
+typedef FailureBuilder<ErrorType> = Widget Function(
   BuildContext context,
-  FailureReason error,
+  ErrorType error,
 );
 
-/// This function takes a [BuildContext], [Bloc], and a [Widget] and returns a widget
-///
 /// Used when [onFailure] is not provided to a [StateNotifierBuilder]
-typedef GlobalFailureBuilder = Widget Function(
+typedef GlobalFailureBuilder<ErrorType> = Widget Function(
   BuildContext context,
-  FailureReason reason,
+  ErrorType error,
   Widget? lastStateBuild,
 );
 
@@ -42,7 +34,7 @@ typedef GlobalLoadingBuilder = Widget Function(
   Widget? lastStateBuild,
 );
 
-class StateNotifierBuilder<S> extends RStatelessWidget {
+class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
   const StateNotifierBuilder({
     Key? key,
     required this.notifier,
@@ -52,26 +44,25 @@ class StateNotifierBuilder<S> extends RStatelessWidget {
     this.selector,
   }) : super(key: key);
 
-  /// Bloc whose changes this builder listens to
-  final StateNotifier<S> notifier;
+  /// [StateNotifier] whose changes this builder listens to
+  final StateNotifier<StateType, ErrorType> notifier;
 
   /// This is called when [notifier.state] is [Loaded]
-  final LoadedBuilder<S> onLoaded;
+  final LoadedBuilder<StateType> onLoaded;
 
   /// This is called when [notifier.state] is [Loading]
-  final LoadingBuilder<S>? onLoading;
+  final LoadingBuilder<StateType>? onLoading;
 
   /// This is called when [notifier.state] is [Failure]
   final FailureBuilder? onFailure;
 
-
   /// Widget is rebuild only when selector return a different value than
   /// the last one
-  final Selector<StateNotifier<S>>? selector;
+  final Selector<StateNotifier<StateType, ErrorType>>? selector;
 
   /// This is called when there is a [Failure] but no [onFailure] is defined
   static GlobalFailureBuilder globalOnFailure =
-      (context, reason, lastStateBuild) {
+      (context, error, lastStateBuild) {
     if (lastStateBuild != null) {
       return lastStateBuild;
     }
@@ -79,7 +70,7 @@ class StateNotifierBuilder<S> extends RStatelessWidget {
     return Container(
       color: Colors.red,
       child: Center(
-        child: Text(reason.toString()),
+        child: Text(error.toString()),
       ),
     );
   };
@@ -100,7 +91,7 @@ class StateNotifierBuilder<S> extends RStatelessWidget {
   };
 
   /// Widget that the builder returns when the notifier is busy
-  Widget _buildLoading(BuildContext context, S? data) {
+  Widget _buildLoading(BuildContext context, StateType? data) {
     return onLoading?.call(context, data) ??
         globalOnLoading(
           context,
@@ -109,11 +100,15 @@ class StateNotifierBuilder<S> extends RStatelessWidget {
   }
 
   /// Widget that the builder return when the notifier has an error
-  Widget _buildFailure(BuildContext context, S? data, FailureReason reason) {
-    return onFailure?.call(context, reason) ??
+  Widget _buildFailure(
+    BuildContext context,
+    StateType? data,
+    ErrorType error,
+  ) {
+    return onFailure?.call(context, error) ??
         globalOnFailure(
           context,
-          reason,
+          error,
           data != null ? onLoaded(context, data) : null,
         );
   }
@@ -125,7 +120,12 @@ class StateNotifierBuilder<S> extends RStatelessWidget {
     return switch (notifier.state) {
       Loading(:final data) || Idle(:final data) => _buildLoading(context, data),
       Loaded(:final data) => onLoaded(context, data),
-      Failure(:final data, :final reason) => _buildFailure(context, data, reason),
+      Failure(:final data, :final error) => _buildFailure(
+          context,
+          data,
+          error,
+        ),
+      _ => throw StateError(notifier.state.toString()),
     };
   }
 }
