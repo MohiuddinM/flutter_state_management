@@ -12,7 +12,7 @@ typedef LoadedBuilder<T> = Widget Function(BuildContext context, T data);
 /// with busy widget (e.g. progress indicator)
 typedef LoadingBuilder<T> = Widget Function(BuildContext context, T? data);
 
-/// Used when [StateNotifier.state] is a [Failure] and an error widget should
+/// Used when [StateNotifier.state] is a [Failed] and an error widget should
 /// be built to show that error
 typedef FailureBuilder<ErrorType> = Widget Function(
   BuildContext context,
@@ -53,14 +53,14 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
   /// This is called when [notifier.state] is [Loading]
   final LoadingBuilder<StateType>? onLoading;
 
-  /// This is called when [notifier.state] is [Failure]
+  /// This is called when [notifier.state] is [Failed]
   final FailureBuilder? onFailure;
 
   /// Widget is rebuild only when selector return a different value than
   /// the last one
   final Selector<StateNotifier<StateType, ErrorType>>? selector;
 
-  /// This is called when there is a [Failure] but no [onFailure] is defined
+  /// This is called when there is a [Failed] but no [onFailure] is defined
   static GlobalFailureBuilder globalOnFailure =
       (context, error, lastStateBuild) {
     if (lastStateBuild != null) {
@@ -120,7 +120,7 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     return switch (notifier.state) {
       Loading(:final data) || Idle(:final data) => _buildLoading(context, data),
       Loaded(:final data) => onLoaded(context, data),
-      Failure(:final data, :final error) => _buildFailure(
+      Failed(:final data, :final error) => _buildFailure(
           context,
           data,
           error,

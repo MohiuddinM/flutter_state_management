@@ -8,22 +8,22 @@ import 'state.dart';
 abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
   StateNotifier(this._state);
 
-  DataEvent<StateType, ErrorType> _state;
+  Event<StateType, ErrorType> _state;
 
-  set state(DataEvent<StateType, ErrorType> s) {
+  set state(Event<StateType, ErrorType> s) {
     _state = s;
     notifyListeners();
   }
 
   void refresh() => notifyListeners();
 
-  DataEvent<StateType, ErrorType> get state => _state;
+  Event<StateType, ErrorType> get state => _state;
 
   bool get hasData => state.data != null;
 
   bool get hasNoData => state.data == null;
 
-  bool get hasError => state is Failure;
+  bool get hasError => state is Failed;
 
   bool get isBusy => state is Loading;
 
@@ -81,7 +81,7 @@ abstract class PersistedStateNotifier<StateType, ErrorType>
   bool _isPrimitive(StateType v) =>
       v is num || v is String || v is DateTime || v is bool;
 
-  set persistedState(DataEvent<StateType, ErrorType> s) {
+  set persistedState(Event<StateType, ErrorType> s) {
     if (s is Loaded) {
       final data = s.data as StateType;
       _store.set(key, serialize(data));
