@@ -1,3 +1,7 @@
+## 0.0.5
+
+* add when and hasNoData
+
 ## 0.0.4
 
 * fix typo
