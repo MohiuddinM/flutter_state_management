@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_state_management/flutter_state_management.dart';
 import 'package:isar_key_value/isar_key_value.dart';
 
-void main() async {
+void main() {
   runApp(const MyApp());
 }
 
