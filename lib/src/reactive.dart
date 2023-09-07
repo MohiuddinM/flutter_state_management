@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-typedef Selector<R extends Listenable> = dynamic Function(R model);
+typedef Selector<T extends Listenable> = dynamic Function(T model);
 
 abstract class RStatelessWidget extends StatelessWidget with _Watchable {
   const RStatelessWidget({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ abstract class RStatefulWidget extends StatefulWidget with _Watchable {
 mixin _RElement on ComponentElement {
   final _listeners = <_ListenerKey, _ListenerValue>{};
 
-  void watch<R extends Listenable>(R model, {Selector<R>? selector}) {
+  void watch<T extends Listenable>(T model, {Selector<T>? selector}) {
     final key = _ListenerKey(model, selector.hashCode);
 
     void callback() {
@@ -54,7 +54,7 @@ mixin _RElement on ComponentElement {
     model.addListener(entry.callback);
   }
 
-  void unwatch<R extends Listenable>() {
+  void unwatch() {
     for (final MapEntry(:key, :value) in _listeners.entries) {
       key.model.removeListener(value.callback);
     }
@@ -78,24 +78,23 @@ class _RStatefulElement extends StatefulElement with _RElement {
 }
 
 mixin _Watchable {
-  R watch<R extends Listenable>(
+  void watch<T extends Listenable>(
     BuildContext context,
-    R model, {
-    Selector<R>? selector,
+    T model, {
+    Selector<T>? selector,
   }) {
     if (context is! _RElement) {
       throw ArgumentError('watch can only be called inside RWidget');
     }
 
     context.watch(model, selector: selector);
-    return model;
   }
 }
 
-extension ListenableX<R extends Listenable> on R {
+extension ListenableX<T extends Listenable> on T {
   void watch(
     BuildContext context, {
-    Selector<R>? selector,
+    Selector<T>? selector,
   }) {
     if (context is! _RElement) {
       throw ArgumentError('watch can only be called inside RWidget');
@@ -105,7 +104,7 @@ extension ListenableX<R extends Listenable> on R {
   }
 }
 
-class _ListenerValue<R extends Listenable> {
+class _ListenerValue {
   final VoidCallback callback;
   final dynamic selection;
 
@@ -130,7 +129,9 @@ class _ListenerKey<T extends Listenable> {
 
   @override
   bool operator ==(Object other) {
-    return other is _ListenerKey && other.model == model && other.code == code;
+    return other is _ListenerKey<T> &&
+        other.model == model &&
+        other.code == code;
   }
 
   @override
