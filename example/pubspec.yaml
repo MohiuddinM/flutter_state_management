@@ -9,12 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_state_management: ^0.0.3
+  flutter_state_management: ^0.0.6
 #  flutter_state_management:
 #    path: ../../flutter_state_management
   path_provider: ^2.1.1
   path: ^1.8.3
-  isar_key_value: ^0.1.3
+  isar_key_value: ^0.2.0
 
 dev_dependencies:
   test: ^1.24.6

@@ -1,3 +1,7 @@
+## 0.0.6
+
+* replace model with void as return type
+
 ## 0.0.5
 
 * add when and hasNoData

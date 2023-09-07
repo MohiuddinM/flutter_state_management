@@ -113,11 +113,10 @@ packages:
   flutter_state_management:
     dependency: "direct main"
     description:
-      name: flutter_state_management
-      sha256: f8e5c8c8638063a8828e79d682c8e679a307db8d0beda87f8c4eb68b39a95c52
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.5"
   frontend_server_client:
     dependency: transitive
     description:
@@ -178,10 +177,10 @@ packages:
     dependency: "direct main"
     description:
       name: isar_key_value
-      sha256: "12b4049129ef45c672fa6e60e6911388e7c7765c9c1524026d9629a8b3494cdd"
+      sha256: d05d1839957d8f7aa4f90029fd7eb018f39a5607a6a53a535247847e1b28a523
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.3"
+    version: "0.2.0"
   js:
     dependency: transitive
     description:
