@@ -12,16 +12,46 @@ easier to use the Flutter framework's built-in ChangeNotifier and Listenable.
 
 Create your model class
 ```dart
-class Counter extends PersistedStateNotifier<int> {
+class Counter extends StateNotifier<int, Error> {
+  Counter() : super(const Loaded(data: 0));
+
+  void increment() async {
+    state = Loading(data: data);
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (data > 20) {
+      state = Failed(error: StateError('greater than 20'), data: data);
+    } else {
+      state = Loaded(data: data + 1);
+    }
+  }
+}
+```
+
+Or if you want the state to persist across restarts
+```dart
+class Counter extends PersistedStateNotifier<int, int> {
   Counter() : super(IsarKeyValue(), startState: 0);
 
-  void increment() => persistedState = Loaded(data: data + 1);
+  void increment() async {
+    persistedState = Loading(data: data);
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (data > 20) {
+      persistedState = Failed(error: StateError('greater than 20'), data: data);
+    } else {
+      persistedState = Loaded(data: data + 1);
+    }
+  }
 }
 ```
 \
 \
 Use builder to handle state changes in the UI
 ```dart
+final counter = Counter();
 
 counter.builder(
   onLoaded: (context, data) => Text(data.toString()),

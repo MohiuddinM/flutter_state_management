@@ -13,7 +13,7 @@ class MyApp extends RStatelessWidget {
   Widget build(BuildContext context) {
     final counter = counterResolver();
 
-    counter.watch(context,  selector: (model) => model.state);
+    counter.watch(context, selector: (model) => model.state);
 
     return MaterialApp(
       home: Scaffold(
@@ -46,9 +46,30 @@ final counterResolver = Resolver((arg) => Counter());
 class Counter extends PersistedStateNotifier<int, int> {
   Counter() : super(IsarKeyValue(), startState: 0);
 
+  // Overriding persistence key is useful for versioning or
+  // for differentiating between models of the same type
+  @override
+  String get key => '$runtimeType.1';
+
   void increment() async {
     persistedState = Loading(data: data);
     await Future.delayed(const Duration(seconds: 2));
     persistedState = Loaded(data: data + 1);
+  }
+}
+
+class _Counter extends StateNotifier<int, Error> {
+  _Counter() : super(const Loaded(data: 0));
+
+  void increment() async {
+    state = Loading(data: data);
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (data > 20) {
+      state = Failed(error: StateError('greater than 20'), data: data);
+    } else {
+      state = Loaded(data: data + 1);
+    }
   }
 }
