@@ -1,3 +1,7 @@
+## 0.0.7
+
+* update docs
+
 ## 0.0.6
 
 * replace model with void as return type
