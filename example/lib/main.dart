@@ -62,14 +62,14 @@ class _Counter extends StateNotifier<int, Error> {
   _Counter() : super(const Loaded(data: 0));
 
   void increment() async {
-    state = Loading(data: data);
+    setLoaded(data);
 
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
-      state = Failed(error: StateError('greater than 20'), data: data);
+      setFailure(StateError('greater than 20'));
     } else {
-      state = Loaded(data: data + 1);
+      setLoaded(data + 1);
     }
   }
 }
