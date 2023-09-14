@@ -17,6 +17,26 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
 
   void refresh() => notifyListeners();
 
+  @protected
+  void setLoading() {
+    state = hasData ? Loading(data: data) : const Loading();
+  }
+
+  @protected
+  void setFailure(ErrorType error) {
+    state = hasData ? Failed(error: error, data: data) : Failed(error: error);
+  }
+
+  @protected
+  void setLoaded(StateType data) {
+    state = Loaded(data: data);
+  }
+
+  @protected
+  void setIdle() {
+    state = hasData ? Idle(data: data) : const Idle();
+  }
+
   Event<StateType, ErrorType> get state => _state;
 
   bool get hasData => state.data != null;
