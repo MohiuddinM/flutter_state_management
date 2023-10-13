@@ -1,3 +1,8 @@
+## 0.1.0
+
+* rename isBusy to isLoading
+* added loadingFuture to await when busy
+
 ## 0.0.8
 
 * add set methods
