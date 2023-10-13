@@ -10,8 +10,23 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
 
   Event<StateType, ErrorType> _state;
 
+  Completer<void>? _loadingCompleter;
+
+  Future<void> get loadingFuture async {
+    if (_loadingCompleter == null) return;
+    return _loadingCompleter!.future;
+  }
+
   set state(Event<StateType, ErrorType> s) {
     _state = s;
+
+    if (isLoading) {
+      _loadingCompleter ??= Completer();
+    } else {
+      _loadingCompleter?.complete();
+      _loadingCompleter = null;
+    }
+
     notifyListeners();
   }
 
@@ -45,7 +60,7 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
 
   bool get hasError => state is Failed;
 
-  bool get isBusy => state is Loading;
+  bool get isLoading => state is Loading;
 
   StateType get data => state.data!;
 
