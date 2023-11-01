@@ -3,14 +3,14 @@ import 'package:flutter/widgets.dart';
 typedef Selector<T extends Listenable> = dynamic Function(T model);
 
 abstract class RStatelessWidget extends StatelessWidget with _Watchable {
-  const RStatelessWidget({Key? key}) : super(key: key);
+  const RStatelessWidget({super.key});
 
   @override
   StatelessElement createElement() => _RStatelessElement(this);
 }
 
 abstract class RStatefulWidget extends StatefulWidget with _Watchable {
-  const RStatefulWidget({Key? key}) : super(key: key);
+  const RStatefulWidget({super.key});
 
   @override
   StatefulElement createElement() => _RStatefulElement(this);
@@ -70,11 +70,11 @@ mixin _RElement on ComponentElement {
 }
 
 class _RStatelessElement extends StatelessElement with _RElement {
-  _RStatelessElement(StatelessWidget widget) : super(widget);
+  _RStatelessElement(super.widget);
 }
 
 class _RStatefulElement extends StatefulElement with _RElement {
-  _RStatefulElement(StatefulWidget widget) : super(widget);
+  _RStatefulElement(super.widget);
 }
 
 mixin _Watchable {

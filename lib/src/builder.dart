@@ -36,13 +36,13 @@ typedef GlobalLoadingBuilder = Widget Function(
 
 class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
   const StateNotifierBuilder({
-    Key? key,
+    super.key,
     required this.notifier,
     required this.onLoaded,
     this.onLoading,
     this.onFailure,
     this.selector,
-  }) : super(key: key);
+  });
 
   /// [StateNotifier] whose changes this builder listens to
   final StateNotifier<StateType, ErrorType> notifier;
