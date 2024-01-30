@@ -1,3 +1,7 @@
+## 0.2.0
+
+* builder can also take idle builder
+
 ## 0.1.0
 
 * rename isBusy to isLoading
