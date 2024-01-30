@@ -28,8 +28,7 @@ mixin _RElement on ComponentElement {
       }
 
       if (selector == null) {
-        unwatch();
-        return markNeedsBuild();
+        return needsRebuild();
       }
 
       final selection = selector(model);
@@ -41,8 +40,7 @@ mixin _RElement on ComponentElement {
       );
 
       if (selection != oldSelection) {
-        unwatch();
-        markNeedsBuild();
+        needsRebuild();
       }
 
       _listeners[key] = _ListenerValue(callback, selection);
@@ -54,7 +52,12 @@ mixin _RElement on ComponentElement {
     model.addListener(entry.callback);
   }
 
-  void unwatch() {
+  void needsRebuild() {
+    removeListeners();
+    markNeedsBuild();
+  }
+
+  void removeListeners() {
     for (final MapEntry(:key, :value) in _listeners.entries) {
       key.model.removeListener(value.callback);
     }
@@ -64,7 +67,7 @@ mixin _RElement on ComponentElement {
 
   @override
   void unmount() {
-    unwatch();
+    removeListeners();
     super.unmount();
   }
 }
