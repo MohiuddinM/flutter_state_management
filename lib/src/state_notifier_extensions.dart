@@ -10,6 +10,7 @@ extension StateNotifierExtensions<StateType, ErrorType>
     Key? key,
     required LoadedBuilder<StateType> onLoaded,
     LoadingBuilder<StateType>? onLoading,
+    LoadingBuilder<StateType>? onIdle,
     FailureBuilder? onFailure,
     Selector<StateNotifier<StateType, ErrorType>>? selector,
   }) {
@@ -18,6 +19,7 @@ extension StateNotifierExtensions<StateType, ErrorType>
       onLoaded: onLoaded,
       onFailure: onFailure,
       onLoading: onLoading,
+      onIdle: onIdle,
       selector: selector,
       notifier: this,
     );

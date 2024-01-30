@@ -40,6 +40,7 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     required this.notifier,
     required this.onLoaded,
     this.onLoading,
+    this.onIdle,
     this.onFailure,
     this.selector,
   });
@@ -52,6 +53,9 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
 
   /// This is called when [notifier.state] is [Loading]
   final LoadingBuilder<StateType>? onLoading;
+
+  /// This is called when [notifier.state] is [Idle]
+  final LoadingBuilder<StateType>? onIdle;
 
   /// This is called when [notifier.state] is [Failed]
   final FailureBuilder? onFailure;
@@ -90,6 +94,10 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     );
   };
 
+  Widget _buildIdle(BuildContext context, StateType? data) {
+    return onIdle?.call(context, data) ?? _buildLoading(context, data);
+  }
+
   /// Widget that the builder returns when the notifier is busy
   Widget _buildLoading(BuildContext context, StateType? data) {
     return onLoading?.call(context, data) ??
@@ -118,7 +126,8 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     watch(context, notifier, selector: selector);
 
     return switch (notifier.state) {
-      Loading(:final data) || Idle(:final data) => _buildLoading(context, data),
+      Idle(:final data) => _buildIdle(context, data),
+      Loading(:final data) => _buildLoading(context, data),
       Loaded(:final data) => onLoaded(context, data),
       Failed(:final data, :final error) => _buildFailure(
           context,
