@@ -60,9 +60,13 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
 
   bool get hasNoData => state.data == null;
 
+  bool get hasCurrentData => state is Loaded;
+
   bool get hasError => state is Failed;
 
   bool get isLoading => state is Loading;
+
+  bool get isIdle => state is Idle;
 
   StateType get data => state.data!;
 
