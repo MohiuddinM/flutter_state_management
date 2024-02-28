@@ -48,8 +48,8 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
   }
 
   @protected
-  void setIdle() {
-    state = hasData ? Idle(data: data) : const Idle();
+  void setIdle({bool removeData = true}) {
+    state = removeData || hasNoData ? const Idle() : Idle(data: data);
   }
 
   Event<StateType, ErrorType> get state => _state;
