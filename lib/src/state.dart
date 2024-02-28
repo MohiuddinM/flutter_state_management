@@ -81,16 +81,16 @@ final class Failed<StateType, ErrorType>
 
 extension DataEventX<StateType, ErrorType> on Event<StateType, ErrorType> {
   T? when<T>({
-    T Function(Loaded<StateType> data)? onLoaded,
-    T Function(Idle<StateType> data)? onIdle,
-    T Function(Loading<StateType> data)? onLoading,
-    T Function(Failed<StateType, ErrorType> data)? onFailure,
+    T Function(Loaded<StateType> data)? loaded,
+    T Function(Idle<StateType> data)? idle,
+    T Function(Loading<StateType> data)? loading,
+    T Function(Failed<StateType, ErrorType> data)? failure,
   }) {
     return switch (this) {
-      Loading() => onLoading?.call(this as Loading<StateType>),
-      Idle() => onIdle?.call(this as Idle<StateType>),
-      Loaded() => onLoaded?.call(this as Loaded<StateType>),
-      Failed() => onFailure?.call(this as Failed<StateType, ErrorType>),
+      Loading() => loading?.call(this as Loading<StateType>),
+      Idle() => idle?.call(this as Idle<StateType>),
+      Loaded() => loaded?.call(this as Loaded<StateType>),
+      Failed() => failure?.call(this as Failed<StateType, ErrorType>),
       _ => null,
     };
   }
