@@ -1,3 +1,10 @@
+## 0.3.0
+
+* add remove data options in set* methods
+* add isIdle and hasCurrentData getters
+* remove protected from set methods
+* rename args on when method
+
 ## 0.2.0
 
 * builder can also take idle builder
