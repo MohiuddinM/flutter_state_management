@@ -32,24 +32,20 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
 
   void refresh() => notifyListeners();
 
-  @protected
   void setLoading({bool removeData = false}) {
     state = (removeData || hasNoData) ? const Loading() : Loading(data: data);
   }
 
-  @protected
   void setFailure(ErrorType error, {bool removeData = false}) {
     state = (removeData || hasNoData)
         ? Failed(error: error)
         : Failed(error: error, data: data);
   }
 
-  @protected
   void setLoaded(StateType data) {
     state = Loaded(data: data);
   }
 
-  @protected
   void setIdle({bool removeData = false}) {
     state = (removeData || hasNoData) ? const Idle() : Idle(data: data);
   }
