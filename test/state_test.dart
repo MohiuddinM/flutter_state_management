@@ -34,10 +34,10 @@ void main() {
       const loading = Loading<int>(data: 3);
       const failed = Failed<int, String>(error: 'Error', data: 4);
 
-      expect(idle.when(onIdle: (event) => event.data), equals(1));
-      expect(loaded.when(onLoaded: (event) => event.data), equals(2));
-      expect(loading.when(onLoading: (event) => event.data), equals(3));
-      expect(failed.when(onFailure: (event) => event.data), equals(4));
+      expect(idle.when(idle: (event) => event.data), equals(1));
+      expect(loaded.when(loaded: (event) => event.data), equals(2));
+      expect(loading.when(loading: (event) => event.data), equals(3));
+      expect(failed.when(failure: (event) => event.data), equals(4));
     });
   });
 }
