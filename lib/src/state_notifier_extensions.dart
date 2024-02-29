@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_state_management/src/state_notifier.dart';
 import 'package:flutter_state_management/src/reactive.dart';
