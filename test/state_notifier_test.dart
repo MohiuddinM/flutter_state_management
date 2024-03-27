@@ -1,8 +1,4 @@
-// ignore_for_file: invalid_use_of_protected_member
-
 import 'package:flutter_state_management/flutter_state_management.dart';
-import 'package:flutter_state_management/src/state.dart';
-import 'package:flutter_state_management/src/state_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar_key_value/isar_key_value.dart';
 import 'package:mockito/mockito.dart';
