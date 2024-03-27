@@ -20,6 +20,9 @@ final class Idle<StateType> implements Event<StateType, Never> {
 
   @override
   int get hashCode => data.hashCode;
+
+  @override
+  String toString() => 'Idle<$StateType>(data: $data)';
 }
 
 final class Loaded<StateType> implements Event<StateType, Never> {
@@ -38,6 +41,9 @@ final class Loaded<StateType> implements Event<StateType, Never> {
 
   @override
   int get hashCode => data.hashCode;
+
+  @override
+  String toString() => 'Loaded<$StateType>(data: $data)';
 }
 
 final class Loading<StateType> implements Event<StateType, Never> {
@@ -56,6 +62,9 @@ final class Loading<StateType> implements Event<StateType, Never> {
 
   @override
   int get hashCode => data.hashCode;
+
+  @override
+  String toString() => 'Loading<$StateType>(data: $data)';
 }
 
 final class Failed<StateType, ErrorType>
@@ -77,6 +86,9 @@ final class Failed<StateType, ErrorType>
 
   @override
   int get hashCode => Object.hash(error, data);
+
+  @override
+  String toString() => 'Failed<$StateType, $ErrorType>(data: $data, $error)';
 }
 
 extension DataEventX<StateType, ErrorType> on Event<StateType, ErrorType> {

@@ -67,6 +67,11 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
   StateType get data => state.data!;
 
   ErrorType get error => state.error!;
+
+  @override
+  String toString() {
+    return '$runtimeType($_state)';
+  }
 }
 
 abstract class PersistedStateNotifier<StateType, ErrorType>
