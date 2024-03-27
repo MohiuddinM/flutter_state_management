@@ -11,9 +11,7 @@ class MyApp extends RStatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counter = counterResolver();
-
-    counter.watch(context, selector: (model) => model.state);
+    final counter = counterResolver()..watch(context);
 
     return MaterialApp(
       home: Scaffold(
