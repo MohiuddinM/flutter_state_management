@@ -1,3 +1,9 @@
+## 0.4.0
+
+* add toString methods
+* add removeFromCache
+* make create method private
+
 ## 0.3.0
 
 * add remove data options in set* methods
