@@ -30,7 +30,7 @@ final class Resolver<T extends StateNotifier, R> {
   ///
   /// if [useCache] is false then a new notifier is created everytime,
   /// otherwise returns a cached notifier if it exists
-  T create({R? arg, bool useCache = true}) {
+  T _create({R? arg, bool useCache = true}) {
     if (_toInject != null) {
       return _toInject!;
     }
@@ -50,18 +50,25 @@ final class Resolver<T extends StateNotifier, R> {
 
   /// Redirects to [create]
   T call({R? arg, bool useCache = true}) =>
-      create(arg: arg, useCache: useCache);
+      _create(arg: arg, useCache: useCache);
 
   /// Clears cached notifiers only of type [T]
   void clearCache({bool dispose = false}) {
     final entries = _cache.entries.where((e) => e.key.type == T);
 
     for (final MapEntry(:key, :value) in entries) {
-      if (dispose) {
-        value.dispose();
-      }
       _cache.remove(key);
+
+      if (dispose) {
+        value.dispose(removeFromCache: false);
+      }
     }
+  }
+
+  /// Removes a cached [StateNotifier] from cache. Does nothing if value is
+  /// not found in cache
+  static void removeFromCache(StateNotifier notifier) {
+    _cache.removeWhere((_, value) => value == notifier);
   }
 
   /// Removes all cached notifiers of all types

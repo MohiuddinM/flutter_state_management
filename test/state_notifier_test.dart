@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'package:flutter_state_management/flutter_state_management.dart';
 import 'package:flutter_state_management/src/state.dart';
 import 'package:flutter_state_management/src/state_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +8,8 @@ import 'package:isar_key_value/isar_key_value.dart';
 import 'package:mockito/mockito.dart';
 
 class MockIsarKeyValue extends Mock implements IsarKeyValue {}
+
+final testResolver = Resolver((_) => TestStateNotifier());
 
 class TestStateNotifier extends StateNotifier<int, String> {
   TestStateNotifier() : super(const Idle());
@@ -104,6 +107,28 @@ void main() {
       expect(notifier.loadingFuture, completes);
       notifier.setLoaded(1);
       expect(notifier.loadingFuture, completes);
+    });
+  });
+
+  group('Resolver', () {
+    test('notifier is removed on dispose', () {
+      final notifier = testResolver();
+      expect(Resolver.cachedNotifiers.length, 1);
+      notifier.dispose();
+      expect(Resolver.cachedNotifiers.length, 0);
+
+      final notifier2 = testResolver();
+      expect(notifier, isNot(notifier2));
+    });
+
+    test('notifier is not removed on dispose if removeFromCache is false', () {
+      final notifier = testResolver();
+      expect(Resolver.cachedNotifiers.length, 1);
+      notifier.dispose(removeFromCache: false);
+      expect(Resolver.cachedNotifiers.length, 1);
+
+      final notifier2 = testResolver();
+      expect(notifier, notifier2);
     });
   });
 

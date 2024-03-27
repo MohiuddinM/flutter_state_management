@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_state_management/flutter_state_management.dart';
 import 'package:isar_key_value/isar_key_value.dart';
-
-import 'state.dart';
 
 abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
   StateNotifier(this._state);
@@ -67,6 +66,15 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
   StateType get data => state.data!;
 
   ErrorType get error => state.error!;
+
+  @override
+  @mustCallSuper
+  void dispose({bool removeFromCache = true}) {
+    if (removeFromCache) {
+      Resolver.removeFromCache(this);
+    }
+    super.dispose();
+  }
 
   @override
   String toString() {
