@@ -1,9 +1,9 @@
 ## Flutter State Management
-This is not a new state management solution. It is just a couple of utility classes to make it 
-easier to use the Flutter framework's built-in ChangeNotifier and Listenable.
+Just a couple of utility classes to make it easier to use Flutter framework's built-in 
+[ChangeNotifier](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html) 
+and [Listenable](https://api.flutter.dev/flutter/foundation/Listenable-class.html) for state management.
 
 ## Features
-
 - No learning curve if you already know Flutter
 - Simple package based on ChangeNotifier (No bloatware)
 
@@ -47,9 +47,32 @@ class Counter extends PersistedStateNotifier<int, int> {
   }
 }
 ```
-\
-\
-Use builder to handle state changes in the UI
+
+## Handle State Changes in UI
+#### To only rebuild specific parts:
+1. Use [ValueListenableBuilder](https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html) from the Flutter framework:
+```dart
+final counter = Counter();
+
+ValueListenableBuilder(
+  valueListenable: counter,
+  child: Text()
+  builder: (context, state, child) => // return updated UI here (can also use counter.builderArg here)
+  child: const Text('Hello'),
+  ),
+);
+```
+You can also use **builderArg** helper:
+```dart
+builder: counter.builderArg(
+  onLoaded: ,
+  onLoading: ,
+  onIdle: ,
+  onFailure: ,
+),
+```
+
+2. Or use StateNotifierBuilder that comes with this package and is more user friendly:
 ```dart
 final counter = Counter();
 
@@ -58,14 +81,17 @@ counter.builder(
 ),
 ```
 
-Or convert your existing StatelessWidget to RStatelessWidget, and StatefulWidget to RStatefulWidget
-and just watch the model inside the build method
+\
+\
 
+#### To rebuild whole widget
+Convert your existing StatelessWidget to RStatelessWidget, and StatefulWidget to RStatefulWidget 
+and and just watch the model inside the build method:
 ```dart
 class CounterText extends RStatelessWidget {
   @override
   Widget build(BuildContext context) {
-    counter.watch(context); // watch must be called inside the build method
+    counter.watch(context); // call watch inside the build method (do not use any if) 
     return Text(data.toString());
   }
 }
