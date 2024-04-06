@@ -1,3 +1,8 @@
+## 0.5.0
+
+* state notifiers implement ValueListenable
+* add extension method for state notifier
+
 ## 0.4.0
 
 * add toString methods
