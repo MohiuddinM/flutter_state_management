@@ -1,10 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_state_management/flutter_state_management.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isar_key_value/isar_key_value.dart';
 
-abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
+import 'resolver.dart';
+import 'state.dart';
+
+abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
+    implements ValueListenable<Event<StateType, ErrorType>> {
   StateNotifier(this._state);
 
   Event<StateType, ErrorType> _state;
@@ -50,6 +53,9 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier {
   }
 
   Event<StateType, ErrorType> get state => _state;
+
+  @override
+  Event<StateType, ErrorType> get value => _state;
 
   bool get hasData => state.data != null;
 
