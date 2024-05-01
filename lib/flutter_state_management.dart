@@ -6,3 +6,4 @@ export 'src/reactive.dart';
 export 'src/resolver.dart';
 export 'src/state_notifier.dart';
 export 'src/state_notifier_extensions.dart';
+export 'src/key_value_store.dart';

@@ -1,9 +1,8 @@
 import 'package:flutter_state_management/flutter_state_management.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:isar_key_value/isar_key_value.dart';
 import 'package:mockito/mockito.dart';
 
-class MockIsarKeyValue extends Mock implements IsarKeyValue {}
+class MockIsarKeyValue extends Mock implements KeyValueStore {}
 
 final testResolver = Resolver((_) => TestStateNotifier());
 
@@ -15,7 +14,7 @@ class TestPersistedStateNotifier extends PersistedStateNotifier<int, String> {
   TestPersistedStateNotifier(super.mockIsarKeyValue);
 }
 
-class MemoryIsarKeyValue implements IsarKeyValue {
+class MemoryIsarKeyValue implements KeyValueStore {
   final _map = <String, dynamic>{};
 
   @override

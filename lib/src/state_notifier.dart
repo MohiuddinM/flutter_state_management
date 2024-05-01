@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:isar_key_value/isar_key_value.dart';
+import 'package:flutter_state_management/src/key_value_store.dart';
 
 import 'resolver.dart';
 import 'state.dart';
@@ -97,7 +97,7 @@ abstract class PersistedStateNotifier<StateType, ErrorType>
     _initializationCompleter.complete(_initialize(startState));
   }
 
-  final IsarKeyValue _store;
+  final KeyValueStore _store;
   final _initializationCompleter = Completer<void>();
   late final String key = runtimeType.toString();
 

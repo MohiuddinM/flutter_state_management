@@ -1,3 +1,7 @@
+## 0.6.0
+
+* remove dependency on Isar (see example to still use it)
+
 ## 0.5.0
 
 * state notifiers implement ValueListenable

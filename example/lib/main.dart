@@ -42,7 +42,7 @@ class MyApp extends RStatelessWidget {
 final counterResolver = Resolver((arg) => Counter());
 
 class Counter extends PersistedStateNotifier<int, int> {
-  Counter() : super(IsarKeyValue(), startState: 0);
+  Counter() : super(IsarKeyValueStore(), startState: 0);
 
   // Overriding persistence key is useful for versioning or
   // for differentiating between models of the same type
@@ -71,3 +71,5 @@ class _Counter extends StateNotifier<int, Error> {
     }
   }
 }
+
+class IsarKeyValueStore extends IsarKeyValue implements KeyValueStore {}
