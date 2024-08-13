@@ -1,3 +1,7 @@
+## 0.6.1
+
+* add asStream extension method for ValueListenable
+
 ## 0.6.0
 
 * remove dependency on Isar (see example to still use it)
