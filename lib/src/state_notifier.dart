@@ -38,7 +38,7 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
     state = (removeData || hasNoData) ? const Waiting() : Waiting(data: data);
   }
 
-  void setFailure(ErrorType error, {bool removeData = false}) {
+  void setFailed(ErrorType error, {bool removeData = false}) {
     state = (removeData || hasNoData)
         ? Failed(error: error)
         : Failed(error: error, data: data);

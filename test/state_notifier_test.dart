@@ -81,7 +81,7 @@ void main() {
     });
 
     test('should set failure state correctly', () {
-      notifier.setFailure('error');
+      notifier.setFailed('error');
       expect(notifier.hasError, true);
       expect(notifier.error, 'error');
     });
