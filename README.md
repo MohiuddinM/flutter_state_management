@@ -12,18 +12,18 @@ and [Listenable](https://api.flutter.dev/flutter/foundation/Listenable-class.htm
 
 Create your model class
 ```dart
-class Counter extends StateNotifier<int, Error> {
-  Counter() : super(const Loaded(data: 0));
+class Counter extends StateNotifier<int, String> {
+  Counter() : super(const Active(data: 0));
 
   void increment() async {
-    state = Loading(data: data);
+    setWaiting(data: data);
 
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
-      state = Failed(error: StateError('greater than 20'), data: data);
+     setFailed('greater than 20', data: data);
     } else {
-      state = Loaded(data: data + 1);
+      setActive(data: data + 1);
     }
   }
 }
@@ -31,18 +31,18 @@ class Counter extends StateNotifier<int, Error> {
 
 Or if you want the state to persist across restarts
 ```dart
-class Counter extends PersistedStateNotifier<int, int> {
+class Counter extends PersistedStateNotifier<int, String> {
   Counter() : super(IsarKeyValue(), startState: 0);
 
   void increment() async {
-    persistedState = Loading(data: data);
+    persistedState = Waiting(data: data);
 
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
-      persistedState = Failed(error: StateError('greater than 20'), data: data);
+      persistedState = Failed('greater than 20', data: data);
     } else {
-      persistedState = Loaded(data: data + 1);
+      persistedState = Active(data: data + 1);
     }
   }
 }
@@ -65,9 +65,9 @@ ValueListenableBuilder(
 You can also use **builderArg** helper:
 ```dart
 builder: counter.builderArg(
-  onLoaded: ,
-  onLoading: ,
-  onIdle: ,
+  onActive: ,
+  onWaiting: ,
+  onNone: ,
   onFailure: ,
 ),
 ```
@@ -77,7 +77,7 @@ builder: counter.builderArg(
 final counter = Counter();
 
 counter.builder(
-  onLoaded: (context, data) => Text(data.toString()),
+  onActive: (context, data) => Text(data.toString()),
 ),
 ```
 
