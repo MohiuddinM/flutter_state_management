@@ -4,22 +4,22 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Event', () {
-    test('Idle should return correct data and error', () {
-      const idle = Idle<int>(data: 1);
-      expect(idle.data, equals(1));
-      expect(idle.error, isNull);
+    test('None should return correct data and error', () {
+      const none = None<int>(data: 1);
+      expect(none.data, equals(1));
+      expect(none.error, isNull);
     });
 
-    test('Loaded should return correct data and error', () {
-      const loaded = Loaded<int>(data: 2);
-      expect(loaded.data, equals(2));
-      expect(loaded.error, isNull);
+    test('Active should return correct data and error', () {
+      const active = Active<int>(data: 2);
+      expect(active.data, equals(2));
+      expect(active.error, isNull);
     });
 
-    test('Loading should return correct data and error', () {
-      const loading = Loading<int>(data: 3);
-      expect(loading.data, equals(3));
-      expect(loading.error, isNull);
+    test('Waiting should return correct data and error', () {
+      const waiting = Waiting<int>(data: 3);
+      expect(waiting.data, equals(3));
+      expect(waiting.error, isNull);
     });
 
     test('Failed should return correct data and error', () {
@@ -29,15 +29,15 @@ void main() {
     });
 
     test('when should return correct value based on event type', () {
-      const idle = Idle<int>(data: 1);
-      const loaded = Loaded<int>(data: 2);
-      const loading = Loading<int>(data: 3);
+      const none = None<int>(data: 1);
+      const active = Active<int>(data: 2);
+      const waiting = Waiting<int>(data: 3);
       const failed = Failed<int, String>(error: 'Error', data: 4);
 
-      expect(idle.when(idle: (event) => event.data), equals(1));
-      expect(loaded.when(loaded: (event) => event.data), equals(2));
-      expect(loading.when(loading: (event) => event.data), equals(3));
-      expect(failed.when(failure: (event) => event.data), equals(4));
+      expect(none.when(none: (event) => event.data), equals(1));
+      expect(active.when(active: (event) => event.data), equals(2));
+      expect(waiting.when(waiting: (event) => event.data), equals(3));
+      expect(failed.when(failed: (event) => event.data), equals(4));
     });
   });
 }

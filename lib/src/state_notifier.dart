@@ -12,21 +12,21 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
 
   Event<StateType, ErrorType> _state;
 
-  Completer<void>? _loadingCompleter;
+  Completer<void>? _waitingCompleter;
 
-  Future<void> get loadingFuture async {
-    if (_loadingCompleter == null) return;
-    return _loadingCompleter!.future;
+  Future<void> get waitingFuture async {
+    if (_waitingCompleter == null) return;
+    return _waitingCompleter!.future;
   }
 
   set state(Event<StateType, ErrorType> s) {
     _state = s;
 
-    if (isLoading) {
-      _loadingCompleter ??= Completer();
+    if (isWaiting) {
+      _waitingCompleter ??= Completer();
     } else {
-      _loadingCompleter?.complete();
-      _loadingCompleter = null;
+      _waitingCompleter?.complete();
+      _waitingCompleter = null;
     }
 
     notifyListeners();
@@ -34,8 +34,8 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
 
   void refresh() => notifyListeners();
 
-  void setLoading({bool removeData = false}) {
-    state = (removeData || hasNoData) ? const Loading() : Loading(data: data);
+  void setWaiting({bool removeData = false}) {
+    state = (removeData || hasNoData) ? const Waiting() : Waiting(data: data);
   }
 
   void setFailure(ErrorType error, {bool removeData = false}) {
@@ -44,12 +44,12 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
         : Failed(error: error, data: data);
   }
 
-  void setLoaded(StateType data) {
-    state = Loaded(data: data);
+  void setActive(StateType data) {
+    state = Active(data: data);
   }
 
-  void setIdle({bool removeData = false}) {
-    state = (removeData || hasNoData) ? const Idle() : Idle(data: data);
+  void setNone({bool removeData = false}) {
+    state = (removeData || hasNoData) ? const None() : None(data: data);
   }
 
   Event<StateType, ErrorType> get state => _state;
@@ -61,13 +61,13 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
 
   bool get hasNoData => state.data == null;
 
-  bool get hasCurrentData => state is Loaded;
+  bool get hasCurrentData => state is Active;
 
   bool get hasError => state is Failed;
 
-  bool get isLoading => state is Loading;
+  bool get isWaiting => state is Waiting;
 
-  bool get isIdle => state is Idle;
+  bool get isNone => state is None;
 
   StateType get data => state.data!;
 
@@ -77,7 +77,7 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
   @mustCallSuper
   void dispose({bool removeFromCache = true}) {
     if (removeFromCache) {
-      Resolver.removeFromCache(this);
+      CreateNotifier.removeCachedNotifier(this);
     }
     super.dispose();
   }
@@ -93,7 +93,7 @@ abstract class PersistedStateNotifier<StateType, ErrorType>
   PersistedStateNotifier(
     this._store, {
     StateType? startState,
-  }) : super(const Idle()) {
+  }) : super(const None()) {
     _initializationCompleter.complete(_initialize(startState));
   }
 
@@ -108,13 +108,13 @@ abstract class PersistedStateNotifier<StateType, ErrorType>
 
     if (lastState != null) {
       _state = lastState is StateType
-          ? Loaded(data: lastState)
-          : Loaded(data: deserialize(lastState));
+          ? Active(data: lastState)
+          : Active(data: deserialize(lastState));
       return notifyListeners();
     }
 
     _state =
-        startState != null ? Loaded(data: startState) : Idle(data: startState);
+        startState != null ? Active(data: startState) : None(data: startState);
     return notifyListeners();
   }
 
@@ -138,7 +138,7 @@ abstract class PersistedStateNotifier<StateType, ErrorType>
       v is num || v is String || v is DateTime || v is bool;
 
   set persistedState(Event<StateType, ErrorType> s) {
-    if (s is Loaded) {
+    if (s is Active) {
       final data = s.data as StateType;
       _store.set(key, serialize(data));
     }

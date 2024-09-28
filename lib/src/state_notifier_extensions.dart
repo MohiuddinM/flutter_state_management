@@ -8,27 +8,27 @@ extension StateNotifierExtensions<StateType, ErrorType>
     on StateNotifier<StateType, ErrorType> {
   Widget builder({
     Key? key,
-    required LoadedBuilder<StateType> onLoaded,
-    LoadingBuilder<StateType>? onLoading,
-    LoadingBuilder<StateType>? onIdle,
+    required ActiveBuilder<StateType> onActive,
+    WaitingBuilder<StateType>? onWaiting,
+    WaitingBuilder<StateType>? onNone,
     FailureBuilder? onFailure,
     Selector<StateNotifier<StateType, ErrorType>>? selector,
   }) {
     return StateNotifierBuilder<StateType, ErrorType>(
       key: key,
-      onLoaded: onLoaded,
+      onActive: onActive,
       onFailure: onFailure,
-      onLoading: onLoading,
-      onIdle: onIdle,
+      onWaiting: onWaiting,
+      onNone: onNone,
       selector: selector,
       notifier: this,
     );
   }
 
   ValueWidgetBuilder<Event<StateType, ErrorType>> builderArg({
-    required Widget Function(BuildContext, StateType, Widget?) onLoaded,
-    required Widget Function(BuildContext, StateType?, Widget?) onLoading,
-    required Widget Function(BuildContext, StateType?, Widget?) onIdle,
+    required Widget Function(BuildContext, StateType, Widget?) onActive,
+    required Widget Function(BuildContext, StateType?, Widget?) onWaiting,
+    required Widget Function(BuildContext, StateType?, Widget?) onNone,
     required Widget Function(
       BuildContext,
       ErrorType,
@@ -39,9 +39,9 @@ extension StateNotifierExtensions<StateType, ErrorType>
   }) {
     return (context, value, child) {
       return switch (value) {
-        Idle(:final data) => onIdle.call(context, data, child),
-        Loading(:final data) => onLoading.call(context, data, child),
-        Loaded(:final data) => onLoaded(context, data, child),
+        None(:final data) => onNone.call(context, data, child),
+        Waiting(:final data) => onWaiting.call(context, data, child),
+        Active(:final data) => onActive(context, data, child),
         Failed(:final data, :final error) => onFailure(
             context,
             error,

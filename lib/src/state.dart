@@ -4,8 +4,8 @@ sealed class Event<StateType, ErrorType> {
   ErrorType? get error;
 }
 
-final class Idle<StateType> implements Event<StateType, Never> {
-  const Idle({this.data});
+final class None<StateType> implements Event<StateType, Never> {
+  const None({this.data});
 
   @override
   final StateType? data;
@@ -15,7 +15,7 @@ final class Idle<StateType> implements Event<StateType, Never> {
 
   @override
   bool operator ==(Object other) {
-    return other is Idle<StateType> && other.data == data;
+    return other is None<StateType> && other.data == data;
   }
 
   @override
@@ -25,8 +25,8 @@ final class Idle<StateType> implements Event<StateType, Never> {
   String toString() => 'Idle<$StateType>(data: $data)';
 }
 
-final class Loaded<StateType> implements Event<StateType, Never> {
-  const Loaded({required this.data});
+final class Active<StateType> implements Event<StateType, Never> {
+  const Active({required this.data});
 
   @override
   final StateType data;
@@ -36,7 +36,7 @@ final class Loaded<StateType> implements Event<StateType, Never> {
 
   @override
   bool operator ==(Object other) {
-    return other is Loaded<StateType> && other.data == data;
+    return other is Active<StateType> && other.data == data;
   }
 
   @override
@@ -46,8 +46,8 @@ final class Loaded<StateType> implements Event<StateType, Never> {
   String toString() => 'Loaded<$StateType>(data: $data)';
 }
 
-final class Loading<StateType> implements Event<StateType, Never> {
-  const Loading({this.data});
+final class Waiting<StateType> implements Event<StateType, Never> {
+  const Waiting({this.data});
 
   @override
   final StateType? data;
@@ -57,7 +57,7 @@ final class Loading<StateType> implements Event<StateType, Never> {
 
   @override
   bool operator ==(Object other) {
-    return other is Loading<StateType> && other.data == data;
+    return other is Waiting<StateType> && other.data == data;
   }
 
   @override
@@ -93,17 +93,26 @@ final class Failed<StateType, ErrorType>
 
 extension DataEventX<StateType, ErrorType> on Event<StateType, ErrorType> {
   T? when<T>({
-    T Function(Loaded<StateType> data)? loaded,
-    T Function(Idle<StateType> data)? idle,
-    T Function(Loading<StateType> data)? loading,
-    T Function(Failed<StateType, ErrorType> data)? failure,
+    T Function(Active<StateType> data)? active,
+    T Function(None<StateType> data)? none,
+    T Function(Waiting<StateType> data)? waiting,
+    T Function(Failed<StateType, ErrorType> data)? failed,
   }) {
     return switch (this) {
-      Loading() => loading?.call(this as Loading<StateType>),
-      Idle() => idle?.call(this as Idle<StateType>),
-      Loaded() => loaded?.call(this as Loaded<StateType>),
-      Failed() => failure?.call(this as Failed<StateType, ErrorType>),
+      Waiting() => waiting?.call(this as Waiting<StateType>),
+      None() => none?.call(this as None<StateType>),
+      Active() => active?.call(this as Active<StateType>),
+      Failed() => failed?.call(this as Failed<StateType, ErrorType>),
       _ => null,
     };
   }
 }
+
+@Deprecated('use None')
+typedef Idle<T> = None<T>;
+
+@Deprecated('use Active')
+typedef Loaded<T> = Active<T>;
+
+@Deprecated('use Waiting')
+typedef Loading<T> = Waiting<T>;

@@ -21,11 +21,11 @@ class MyApp extends RStatelessWidget {
             children: [
               const Text('You have pushed the button this many times:'),
               counter.builder(
-                onLoaded: (context, data) => Text(
+                onActive: (context, data) => Text(
                   data.toString(),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                onLoading: (_, __) => const CircularProgressIndicator(),
+                onWaiting: (_, __) => const CircularProgressIndicator(),
               ),
             ],
           ),
@@ -39,7 +39,7 @@ class MyApp extends RStatelessWidget {
   }
 }
 
-final counterResolver = Resolver((arg) => Counter());
+final counterResolver = CreateNotifier((arg) => Counter());
 
 class Counter extends PersistedStateNotifier<int, int> {
   Counter() : super(IsarKeyValueStore(), startState: 0);
@@ -50,24 +50,24 @@ class Counter extends PersistedStateNotifier<int, int> {
   String get key => '$runtimeType.1';
 
   void increment() async {
-    persistedState = Loading(data: data);
+    persistedState = Waiting(data: data);
     await Future.delayed(const Duration(seconds: 2));
-    persistedState = Loaded(data: data + 1);
+    persistedState = Active(data: data + 1);
   }
 }
 
 class _Counter extends StateNotifier<int, Error> {
-  _Counter() : super(const Loaded(data: 0));
+  _Counter() : super(const Active(data: 0));
 
   void increment() async {
-    setLoaded(data);
+    setActive(data);
 
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
       setFailure(StateError('greater than 20'));
     } else {
-      setLoaded(data + 1);
+      setActive(data + 1);
     }
   }
 }

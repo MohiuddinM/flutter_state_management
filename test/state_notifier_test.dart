@@ -4,10 +4,10 @@ import 'package:mockito/mockito.dart';
 
 class MockIsarKeyValue extends Mock implements KeyValueStore {}
 
-final testResolver = Resolver((_) => TestStateNotifier());
+final testResolver = CreateNotifier((_) => TestStateNotifier());
 
 class TestStateNotifier extends StateNotifier<int, String> {
-  TestStateNotifier() : super(const Idle());
+  TestStateNotifier() : super(const None());
 }
 
 class TestPersistedStateNotifier extends PersistedStateNotifier<int, String> {
@@ -70,14 +70,14 @@ void main() {
     });
 
     test('should set state correctly', () {
-      notifier.state = const Loaded(data: 1);
-      expect(notifier.state, isA<Loaded>());
+      notifier.state = const Active(data: 1);
+      expect(notifier.state, isA<Active>());
       expect(notifier.data, 1);
     });
 
-    test('should set loading state correctly', () {
-      notifier.setLoading();
-      expect(notifier.isLoading, true);
+    test('should set waiting state correctly', () {
+      notifier.setWaiting();
+      expect(notifier.isWaiting, true);
     });
 
     test('should set failure state correctly', () {
@@ -86,31 +86,31 @@ void main() {
       expect(notifier.error, 'error');
     });
 
-    test('should set loaded state correctly', () {
-      notifier.setLoaded(1);
+    test('should set active state correctly', () {
+      notifier.setActive(1);
       expect(notifier.hasData, true);
       expect(notifier.data, 1);
     });
 
-    test('should set idle state correctly', () {
-      notifier.setIdle();
+    test('should set none state correctly', () {
+      notifier.setNone();
       expect(notifier.hasNoData, true);
     });
 
-    test('should return correct loadingFuture', () async {
-      notifier.setLoading();
-      expect(notifier.loadingFuture, completes);
-      notifier.setLoaded(1);
-      expect(notifier.loadingFuture, completes);
+    test('should return correct waitingFuture', () async {
+      notifier.setWaiting();
+      expect(notifier.waitingFuture, completes);
+      notifier.setActive(1);
+      expect(notifier.waitingFuture, completes);
     });
   });
 
   group('Resolver', () {
     test('notifier is removed on dispose', () {
       final notifier = testResolver();
-      expect(Resolver.cachedNotifiers.length, 1);
+      expect(CreateNotifier.cachedNotifiers.length, 1);
       notifier.dispose();
-      expect(Resolver.cachedNotifiers.length, 0);
+      expect(CreateNotifier.cachedNotifiers.length, 0);
 
       final notifier2 = testResolver();
       expect(notifier, isNot(notifier2));
@@ -118,9 +118,9 @@ void main() {
 
     test('notifier is not removed on dispose if removeFromCache is false', () {
       final notifier = testResolver();
-      expect(Resolver.cachedNotifiers.length, 1);
+      expect(CreateNotifier.cachedNotifiers.length, 1);
       notifier.dispose(removeFromCache: false);
-      expect(Resolver.cachedNotifiers.length, 1);
+      expect(CreateNotifier.cachedNotifiers.length, 1);
 
       final notifier2 = testResolver();
       expect(notifier, notifier2);
@@ -150,7 +150,7 @@ void main() {
   //   });
   //
   //   test('should set persisted state correctly', () {
-  //     notifier.persistedState = Loaded(data: 1);
+  //     notifier.persistedState = Active(data: 1);
   //     verify(store.set('TestPersistedStateNotifier', any)).called(1);
   //   });
   // });

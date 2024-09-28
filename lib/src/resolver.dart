@@ -2,24 +2,24 @@ import 'state_notifier.dart';
 import 'type_and_arg.dart';
 
 /// Takes [context] and [arg], returns a [StateNotifier]
-typedef ArgNotifierBuilder<T extends StateNotifier, R> = T Function(R? arg);
+typedef NotifierBuilder<T extends StateNotifier, R> = T Function(R? arg);
 
 /// Creates and caches notifiers instances on the fly
 ///
 /// Guarantees compile time safety
-final class Resolver<T extends StateNotifier, R> {
-  Resolver(this._builder);
+final class CreateNotifier<T extends StateNotifier, R> {
+  CreateNotifier(this._builder);
 
-  final ArgNotifierBuilder<T, R> _builder;
+  final NotifierBuilder<T, R> _builder;
 
   /// Caches of all types are kept in the same static instance, so we can
-  /// support [clearAllCaches]
+  /// support [reset]
   static final _cache = <TypeAndArg, StateNotifier>{};
   T? _toInject;
 
   /// Injects a notifier into this resolver
   ///
-  /// This [Resolver] will always return this injected [notifier].
+  /// This [CreateNotifier] will always return this injected [notifier].
   /// This can be used during testing, to inject mocks.
   void inject(T notifier) => _toInject = notifier;
 
@@ -67,12 +67,12 @@ final class Resolver<T extends StateNotifier, R> {
 
   /// Removes a cached [StateNotifier] from cache. Does nothing if value is
   /// not found in cache
-  static void removeFromCache(StateNotifier notifier) {
+  static void removeCachedNotifier(StateNotifier notifier) {
     _cache.removeWhere((_, value) => value == notifier);
   }
 
   /// Removes all cached notifiers of all types
-  static void clearAllCaches({bool dispose = false}) {
+  static void reset({bool dispose = false}) {
     if (dispose) {
       _cache.forEach((key, value) {
         value.dispose();
@@ -82,5 +82,15 @@ final class Resolver<T extends StateNotifier, R> {
     _cache.clear();
   }
 
+  @Deprecated('use removeCachedNotifier')
+  static void removeFromCache(StateNotifier notifier) =>
+      removeCachedNotifier(notifier);
+
+  @Deprecated('use reset')
+  static void clearAllCaches({bool dispose = false}) => reset(dispose: dispose);
+
   static Iterable<StateNotifier> get cachedNotifiers => _cache.values;
 }
+
+@Deprecated('use CreateNotifier')
+typedef Resolver<A extends StateNotifier, B> = CreateNotifier<A, B>;
