@@ -1,3 +1,7 @@
+## 0.7.1
+
+* update example
+
 ## 0.7.0
 
 * rename classed to match flutter async
