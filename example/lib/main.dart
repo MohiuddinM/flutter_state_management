@@ -65,7 +65,7 @@ class _Counter extends StateNotifier<int, Error> {
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
-      setFailure(StateError('greater than 20'));
+      setFailed(StateError('greater than 20'));
     } else {
       setActive(data + 1);
     }
