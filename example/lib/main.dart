@@ -56,8 +56,8 @@ class Counter extends PersistedStateNotifier<int, int> {
   }
 }
 
-class _Counter extends StateNotifier<int, Error> {
-  _Counter() : super(const Active(data: 0));
+class IntCounter extends StateNotifier<int, Error> {
+  IntCounter() : super(const Active(data: 0));
 
   void increment() async {
     setActive(data);
