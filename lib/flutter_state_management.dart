@@ -1,4 +1,4 @@
-library flutter_state_management;
+library;
 
 export 'src/builder.dart';
 export 'src/state.dart';
