@@ -1,3 +1,8 @@
+## 0.7.2
+
+* update readme
+* rename function
+
 ## 0.7.1
 
 * update example

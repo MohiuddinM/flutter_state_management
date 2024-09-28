@@ -1,6 +1,6 @@
 name: flutter_state_management
 description: A collection of helper classes to make the use of ChangeNotifier easier for state management
-version: 0.7.1
+version: 0.7.2
 homepage: https://github.com/MohiuddinM/flutter_state_management
 
 environment:
