@@ -1,3 +1,8 @@
+## 0.7.0
+
+* rename classed to match flutter async
+* upgrade deps
+
 ## 0.6.1
 
 * add asStream extension method for ValueListenable
