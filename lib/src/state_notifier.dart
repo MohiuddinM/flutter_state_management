@@ -145,4 +145,14 @@ abstract class PersistedStateNotifier<StateType, ErrorType>
 
     super.state = s;
   }
+
+  @override
+  void setActive(StateType data, {bool persist = true}) {
+    if (persist) {
+      persistedState = Active(data: data);
+      return;
+    }
+
+    super.setActive(data);
+  }
 }
