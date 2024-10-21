@@ -1,3 +1,7 @@
+## 0.8.0
+
+* add setActive to PersistedStateNotifier
+
 ## 0.7.2
 
 * update readme
