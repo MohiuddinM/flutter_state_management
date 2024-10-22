@@ -53,3 +53,10 @@ extension StateNotifierExtensions<StateType, ErrorType>
     };
   }
 }
+
+extension BuildContextNotifierX on BuildContext {
+  T? notifier<R, S, T extends StateNotifier<R, S>>() {
+    final builder = findAncestorWidgetOfExactType<StateNotifierBuilder<R, S>>();
+    return builder?.notifier as T?;
+  }
+}
