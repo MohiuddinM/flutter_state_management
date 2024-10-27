@@ -1,3 +1,8 @@
+## 0.8.1
+
+* builder can take selector with selectOnActiveOnly
+* builder is now StatefulWidget
+
 ## 0.8.0
 
 * add setActive to PersistedStateNotifier
