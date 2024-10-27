@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_state_management: ^0.7.2
+  flutter_state_management: ^0.8.0
 #  flutter_state_management:
 #    path: ../../flutter_state_management
   path_provider: ^2.1.4

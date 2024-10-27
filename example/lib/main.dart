@@ -51,9 +51,9 @@ class Counter extends PersistedStateNotifier<int, int> {
   String get key => '$runtimeType.1';
 
   void increment() async {
-    persistedState = Waiting(data: data);
+    setWaiting();
     await Future.delayed(const Duration(seconds: 2));
-    persistedState = Active(data: data + 1);
+    setActive(data + 1);
   }
 }
 
