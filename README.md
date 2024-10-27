@@ -16,14 +16,14 @@ class Counter extends StateNotifier<int, String> {
   Counter() : super(const Active(data: 0));
 
   void increment() async {
-    setWaiting(data: data);
+    setWaiting();
 
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
-     setFailed('greater than 20', data: data);
+     setFailed('greater than 20');
     } else {
-      setActive(data: data + 1);
+      setActive(data + 1);
     }
   }
 }
@@ -35,14 +35,14 @@ class Counter extends PersistedStateNotifier<int, String> {
   Counter() : super(IsarKeyValue(), startState: 0);
 
   void increment() async {
-    persistedState = Waiting(data: data);
+    setWaiting();
 
     await Future.delayed(const Duration(seconds: 2));
 
     if (data > 20) {
-      persistedState = Failed('greater than 20', data: data);
+      setFailed('greater than 20');
     } else {
-      persistedState = Active(data: data + 1);
+      setActive(data + 1);
     }
   }
 }
