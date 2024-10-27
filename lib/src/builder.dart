@@ -34,7 +34,7 @@ typedef GlobalWaitingBuilder = Widget Function(
   Widget? lastStateBuild,
 );
 
-class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
+class StateNotifierBuilder<StateType, ErrorType> extends StatefulWidget {
   const StateNotifierBuilder({
     super.key,
     required this.notifier,
@@ -43,6 +43,7 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     this.onNone,
     this.onFailure,
     this.selector,
+    this.selectOnActiveOnly = true,
   });
 
   /// [StateNotifier] whose changes this builder listens to
@@ -63,6 +64,9 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
   /// Widget is rebuild only when selector return a different value than
   /// the last one
   final Selector<StateNotifier<StateType, ErrorType>>? selector;
+
+  /// if true, selector will be called only when state is Active
+  final bool selectOnActiveOnly;
 
   /// This is called when there is a [Failed] but no [onFailure] is defined
   static GlobalFailureBuilder globalOnFailure =
@@ -94,16 +98,25 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     );
   };
 
+  @override
+  State<StateNotifierBuilder<StateType, ErrorType>> createState() =>
+      _StateNotifierBuilderState<StateType, ErrorType>();
+}
+
+class _StateNotifierBuilderState<StateType, ErrorType>
+    extends State<StateNotifierBuilder<StateType, ErrorType>> {
+  dynamic lastSelection;
+
   Widget _buildNone(BuildContext context, StateType? data) {
-    return onNone?.call(context, data) ?? _buildWaiting(context, data);
+    return widget.onNone?.call(context, data) ?? _buildWaiting(context, data);
   }
 
   /// Widget that the builder returns when the notifier is busy
   Widget _buildWaiting(BuildContext context, StateType? data) {
-    return onWaiting?.call(context, data) ??
-        globalOnWaiting(
+    return widget.onWaiting?.call(context, data) ??
+        StateNotifierBuilder.globalOnWaiting(
           context,
-          data != null ? onActive(context, data) : null,
+          data != null ? widget.onActive(context, data) : null,
         );
   }
 
@@ -113,28 +126,63 @@ class StateNotifierBuilder<StateType, ErrorType> extends RStatelessWidget {
     StateType? data,
     ErrorType error,
   ) {
-    return onFailure?.call(context, error) ??
-        globalOnFailure(
+    return widget.onFailure?.call(context, error) ??
+        StateNotifierBuilder.globalOnFailure(
           context,
           error,
-          data != null ? onActive(context, data) : null,
+          data != null ? widget.onActive(context, data) : null,
         );
+  }
+
+  void notifierListener() {
+    final state = widget.notifier.state;
+
+    if (state is! Active && widget.selectOnActiveOnly) {
+      return setState(() {});
+    }
+
+    final selector = widget.selector;
+
+    if (selector == null) {
+      return setState(() {});
+    }
+
+    final selection = selector(widget.notifier);
+
+    if (selection == lastSelection) {
+      return;
+    }
+
+    setState(() {
+      lastSelection = selection;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.notifier.addListener(notifierListener);
+  }
+
+  @override
+  void dispose() {
+    widget.notifier.removeListener(notifierListener);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    watch(context, notifier, selector: selector);
-
-    return switch (notifier.state) {
+    return switch (widget.notifier.state) {
       None(:final data) => _buildNone(context, data),
       Waiting(:final data) => _buildWaiting(context, data),
-      Active(:final data) => onActive(context, data),
+      Active(:final data) => widget.onActive(context, data),
       Failed(:final data, :final error) => _buildFailure(
           context,
           data,
           error,
         ),
-      _ => throw StateError(notifier.state.toString()),
+      _ => throw StateError(widget.notifier.state.toString()),
     };
   }
 }

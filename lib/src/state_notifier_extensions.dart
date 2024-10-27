@@ -13,6 +13,7 @@ extension StateNotifierExtensions<StateType, ErrorType>
     WaitingBuilder<StateType>? onNone,
     FailureBuilder? onFailure,
     Selector<StateNotifier<StateType, ErrorType>>? selector,
+    bool selectOnActiveOnly = true,
   }) {
     return StateNotifierBuilder<StateType, ErrorType>(
       key: key,
@@ -21,6 +22,7 @@ extension StateNotifierExtensions<StateType, ErrorType>
       onWaiting: onWaiting,
       onNone: onNone,
       selector: selector,
+      selectOnActiveOnly: selectOnActiveOnly,
       notifier: this,
     );
   }
