@@ -1,7 +1,6 @@
 import 'package:flutter_state_management/src/state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 void main() {
   group('Event', () {
     test('None should return correct data and error', () {
