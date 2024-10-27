@@ -11,7 +11,7 @@ class MyApp extends RStatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counter = createCounter()..watch(context);
+    final counter = createCounter();
 
     return MaterialApp(
       home: Scaffold(
@@ -21,6 +21,7 @@ class MyApp extends RStatelessWidget {
             children: [
               const Text('You have pushed the button this many times:'),
               counter.builder(
+                selector: (counter) => counter.data,
                 onActive: (context, data) => Text(
                   data.toString(),
                   style: Theme.of(context).textTheme.headlineMedium,
