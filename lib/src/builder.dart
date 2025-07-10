@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'state.dart';
 import 'state_notifier.dart';
-import 'reactive.dart';
 
 /// Used when notifier updates its state and widget needs to rebuild with
 /// new data
@@ -34,6 +33,12 @@ typedef GlobalWaitingBuilder = Widget Function(
   Widget? lastStateBuild,
 );
 
+/// Used to select a specific property from a [Listenable]
+///
+/// This is used when the widget needs to rebuild only when a specific property
+/// of the [Listenable] changes, rather than rebuilding on every state change.
+typedef Selector<T extends Listenable> = dynamic Function(T model);
+
 class StateNotifierBuilder<StateType, ErrorType> extends StatefulWidget {
   const StateNotifierBuilder({
     super.key,
@@ -61,8 +66,13 @@ class StateNotifierBuilder<StateType, ErrorType> extends StatefulWidget {
   /// This is called when [notifier.state] is [Failed]
   final FailureBuilder? onFailure;
 
-  /// Widget is rebuild only when selector return a different value than
+  /// Widget is rebuild only when selector returns a different value than
   /// the last one
+  ///
+  /// Make value returned by the selector is immutable, otherwise the widget
+  /// will not rebuild when the state changes even if the value returned by
+  /// the selector changes. This is because selector user ´==´ to compare the
+  /// last value with the new one.
   final Selector<StateNotifier<StateType, ErrorType>>? selector;
 
   /// if true, selector will be called only when state is Active

@@ -1,3 +1,9 @@
+
+## 0.9.0
+
+- improve documentation
+- remove reactive stuff
+
 ## 0.8.1
 
 * builder can take selector with selectOnActiveOnly
