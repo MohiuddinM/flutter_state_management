@@ -78,7 +78,6 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
   /// Consider using [data] or [error] instead.
   Event<StateType, ErrorType> get state => _state;
 
-
   /// The current state of the notifier. Most application do not need to
   /// access this directly, but it can be useful for debugging or
   /// logging purposes.
