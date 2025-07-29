@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_state_management/src/key_value_store.dart';
 
-import 'create_notifier.dart';
 import 'state.dart';
 
 /// An abstract class that manages a piece of state and notifies listeners
@@ -116,10 +115,7 @@ abstract class StateNotifier<StateType, ErrorType> extends ChangeNotifier
 
   @override
   @mustCallSuper
-  void dispose({bool removeFromCache = true}) {
-    if (removeFromCache) {
-      CreateNotifier.removeCachedNotifier(this);
-    }
+  void dispose() {
     super.dispose();
   }
 

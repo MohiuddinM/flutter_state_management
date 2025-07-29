@@ -1,3 +1,7 @@
+## 0.10.0
+
+- remove CreateNotifier (as it adds limited functionality, but adds complexity), now the StateNotifier can be created
+  directly
 
 ## 0.9.0
 

@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 
 class MockIsarKeyValue extends Mock implements KeyValueStore {}
 
-final testResolver = CreateNotifier((_) => TestStateNotifier());
+final testResolver = TestStateNotifier();
 
 class TestStateNotifier extends StateNotifier<int, String> {
   TestStateNotifier() : super(const None());
@@ -102,28 +102,6 @@ void main() {
       expect(notifier.waitingFuture, completes);
       notifier.setActive(1);
       expect(notifier.waitingFuture, completes);
-    });
-  });
-
-  group('Resolver', () {
-    test('notifier is removed on dispose', () {
-      final notifier = testResolver();
-      expect(CreateNotifier.cachedNotifiers.length, 1);
-      notifier.dispose();
-      expect(CreateNotifier.cachedNotifiers.length, 0);
-
-      final notifier2 = testResolver();
-      expect(notifier, isNot(notifier2));
-    });
-
-    test('notifier is not removed on dispose if removeFromCache is false', () {
-      final notifier = testResolver();
-      expect(CreateNotifier.cachedNotifiers.length, 1);
-      notifier.dispose(removeFromCache: false);
-      expect(CreateNotifier.cachedNotifiers.length, 1);
-
-      final notifier2 = testResolver();
-      expect(notifier, notifier2);
     });
   });
 

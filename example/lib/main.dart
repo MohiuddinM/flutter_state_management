@@ -6,13 +6,11 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends RStatelessWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final counter = createCounter();
-
     return MaterialApp(
       home: Scaffold(
         body: Center(
@@ -40,7 +38,7 @@ class MyApp extends RStatelessWidget {
   }
 }
 
-final createCounter = CreateNotifier((arg) => Counter());
+final counter = Counter();
 
 class Counter extends PersistedStateNotifier<int, int> {
   Counter() : super(IsarKeyValueStore(), startState: 0);
